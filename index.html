@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toulouse Sous Surveillance</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --noir: #0a0a0a;
+    --rouge: #e63030;
+    --blanc: #f0ede8;
+    --gris: #1a1a1a;
+    --texte: #c8c4bc;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--noir); color:var(--texte); font-family:'DM Sans',sans-serif; font-weight:300; cursor:none; }
+
+  .cursor { width:12px; height:12px; background:var(--rouge); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; mix-blend-mode:difference; }
+  .cursor-ring { width:36px; height:36px; border:1px solid rgba(230,48,48,0.5); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; transition:left 0.1s ease,top 0.1s ease; }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:20px 40px; background:linear-gradient(to bottom,rgba(10,10,10,0.95),transparent); }
+  .nav-logo { font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--blanc); letter-spacing:4px; }
+  .nav-logo span { color:var(--rouge); }
+  .nav-links { display:flex; gap:32px; list-style:none; }
+  .nav-links a { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--texte); text-decoration:none; transition:color 0.2s; position:relative; }
+  .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:1px; background:var(--rouge); transition:width 0.3s; }
+  .nav-links a:hover { color:var(--blanc); }
+  .nav-links a:hover::after { width:100%; }
+
+  /* HERO */
+  #hero { height:100vh; display:flex; flex-direction:column; justify-content:flex-end; padding:80px 60px; position:relative; overflow:hidden; }
+  .hero-bg { position:absolute; inset:0; background: radial-gradient(ellipse at 70% 30%,rgba(230,48,48,0.08) 0%,transparent 60%), repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(255,255,255,0.012) 60px,rgba(255,255,255,0.012) 61px), repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,0.012) 60px,rgba(255,255,255,0.012) 61px); }
+  .hero-eyecam { position:absolute; top:50%; right:8%; transform:translateY(-50%); width:280px; height:280px; opacity:0.07; }
+  .hero-tag { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--rouge); text-transform:uppercase; margin-bottom:24px; animation:fadeUp 1s ease both; }
+  h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(72px,12vw,160px); line-height:0.9; color:var(--blanc); animation:fadeUp 1s 0.2s ease both; }
+  h1 .red { color:var(--rouge); }
+  .hero-sub { max-width:520px; margin-top:32px; font-size:16px; line-height:1.7; color:var(--texte); animation:fadeUp 1s 0.4s ease both; }
+  .hero-question { margin-top:48px; font-family:'Space Mono',monospace; font-size:13px; color:var(--blanc); border-left:3px solid var(--rouge); padding-left:20px; line-height:1.6; animation:fadeUp 1s 0.6s ease both; }
+  .scroll-hint { position:absolute; bottom:36px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; color:rgba(200,196,188,0.4); }
+  .scroll-line { width:1px; height:48px; background:linear-gradient(to bottom,var(--rouge),transparent); animation:scrollPulse 2s infinite; }
+  .rec-dot { display:inline-block; width:8px; height:8px; background:var(--rouge); border-radius:50%; margin-right:8px; animation:blink 1s infinite; }
+  .observe-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:rgba(230,48,48,0.5); text-transform:uppercase; margin-bottom:4px; }
+
+  /* SECTIONS */
+  section { padding:100px 60px; }
+  .section-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--rouge); margin-bottom:16px; display:flex; align-items:center; gap:16px; }
+  .section-label::before { content:''; width:32px; height:1px; background:var(--rouge); }
+  h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(42px,6vw,80px); color:var(--blanc); line-height:1; margin-bottom:48px; }
+  .sep { width:100%; height:1px; background:linear-gradient(to right,var(--rouge),transparent); margin:60px 0; }
+
+  /* CHAPITRE 1 */
+  #chapitre1 { background:var(--gris); border-top:1px solid #222; }
+  .chiffres-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin:60px 0; background:#222; }
+  .chiffre-bloc { background:var(--gris); padding:48px 36px; position:relative; overflow:hidden; transition:background 0.3s; }
+  .chiffre-bloc:hover { background:#1f1f1f; }
+  .chiffre-bloc::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--rouge); transition:height 0.4s; }
+  .chiffre-bloc:hover::before { height:100%; }
+  .chiffre-num { font-family:'Bebas Neue',sans-serif; font-size:72px; color:var(--blanc); line-height:1; }
+  .chiffre-num span { color:var(--rouge); }
+  .chiffre-label { font-size:13px; color:var(--texte); margin-top:8px; line-height:1.5; }
+  .chiffre-ville { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(200,196,188,0.4); margin-top:12px; text-transform:uppercase; }
+  .terrain-texte { max-width:680px; font-size:16px; line-height:1.85; color:var(--texte); }
+
+  /* PLACEHOLDER PHOTO */
+  .placeholder-photo { width:100%; aspect-ratio:16/9; background:#111; border:1px dashed #333; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; margin:40px 0; color:#444; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; }
+  .placeholder-icon { font-size:32px; opacity:0.3; }
+
+  /* CHAPITRE 2 */
+  #chapitre2 { background:var(--noir); }
+  .expert-card { background:var(--gris); border:1px solid #222; padding:36px; position:relative; max-width:360px; margin-bottom:48px; }
+  .expert-card::after { content:''; position:absolute; bottom:0; right:0; width:40px; height:40px; border-bottom:2px solid var(--rouge); border-right:2px solid var(--rouge); }
+  .expert-avatar { width:64px; height:64px; background:var(--rouge); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--blanc); margin-bottom:20px; }
+  .expert-name { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--blanc); letter-spacing:1px; }
+  .expert-role { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--rouge); margin-top:6px; text-transform:uppercase; }
+  .expert-desc { font-size:13px; line-height:1.7; color:var(--texte); margin-top:16px; }
+  .interview-intro { font-size:18px; line-height:1.8; color:var(--blanc); font-style:italic; font-weight:300; max-width:700px; margin-bottom:48px; }
+
+  .themes-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; background:#1a1a1a; margin:60px 0; }
+  .theme-bloc { background:var(--noir); padding:40px; border-left:3px solid transparent; transition:border-color 0.3s,background 0.3s; }
+  .theme-bloc:hover { border-left-color:var(--rouge); background:#0f0f0f; }
+  .theme-ico { font-size:28px; margin-bottom:16px; }
+  .theme-titre { font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--blanc); letter-spacing:1px; margin-bottom:12px; }
+  .theme-texte { font-size:14px; line-height:1.75; color:var(--texte); }
+  .theme-tag { display:inline-block; margin-top:16px; font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--rouge); text-transform:uppercase; border:1px solid rgba(230,48,48,0.3); padding:4px 10px; }
+
+  .citation-bloc { margin:80px 0; padding:60px; background:var(--gris); border-left:4px solid var(--rouge); position:relative; }
+  .citation-guillemets { font-family:'Bebas Neue',sans-serif; font-size:120px; color:var(--rouge); opacity:0.15; position:absolute; top:-20px; left:40px; line-height:1; }
+  .citation-texte { font-size:22px; line-height:1.6; color:var(--blanc); font-style:italic; font-weight:300; position:relative; z-index:1; }
+  .citation-auteur { margin-top:24px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--rouge); text-transform:uppercase; }
+
+  /* CHAPITRE 3 — SONDAGE */
+  #chapitre3 { background:var(--gris); }
+  .sondage-container { max-width:720px; margin:60px 0; }
+  .sondage-question { background:var(--noir); border:1px solid #2a2a2a; padding:40px; margin-bottom:4px; position:relative; overflow:hidden; }
+  .sondage-question:hover { border-color:#333; }
+  .sq-texte { font-size:17px; color:var(--blanc); margin-bottom:24px; line-height:1.5; }
+  .sq-options { display:flex; flex-direction:column; gap:8px; }
+  .sq-option { display:flex; align-items:center; gap:14px; padding:12px 16px; background:#111; border:1px solid #222; cursor:pointer; transition:all 0.2s; font-size:14px; color:var(--texte); }
+  .sq-option:hover { background:#1a1a1a; border-color:var(--rouge); color:var(--blanc); }
+  .sq-option input { accent-color:var(--rouge); cursor:pointer; }
+  .sq-option.selected { background:#1a0000; border-color:var(--rouge); color:var(--blanc); }
+  .sondage-btn { margin-top:32px; background:var(--rouge); color:var(--blanc); border:none; padding:16px 40px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase; cursor:pointer; transition:opacity 0.2s; }
+  .sondage-btn:hover { opacity:0.85; }
+  .sondage-resultats { display:none; margin-top:24px; }
+  .result-item { margin-bottom:16px; }
+  .result-label { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:1px; color:var(--texte); margin-bottom:6px; display:flex; justify-content:space-between; }
+  .result-bar-bg { width:100%; height:6px; background:#222; }
+  .result-bar { height:6px; background:var(--rouge); transition:width 1s ease; }
+  .merci { font-family:'Space Mono',monospace; font-size:12px; letter-spacing:2px; color:var(--rouge); margin-bottom:20px; }
+
+  /* CHAPITRE 4 */
+  #chapitre4 { background:var(--noir); }
+  .debat-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; background:#222; margin:60px 0; }
+  .debat-bloc { padding:48px; }
+  .debat-pour { background:#0f1a0f; }
+  .debat-contre { background:#1a0f0f; }
+  .debat-titre { font-family:'Bebas Neue',sans-serif; font-size:36px; margin-bottom:24px; }
+  .debat-pour .debat-titre { color:#5a9e5a; }
+  .debat-contre .debat-titre { color:var(--rouge); }
+  .debat-point { display:flex; gap:16px; margin-bottom:20px; font-size:14px; line-height:1.6; color:var(--texte); }
+  .debat-point::before { content:'—'; color:var(--texte); opacity:0.4; flex-shrink:0; }
+
+  /* CHAPITRE 5 */
+  #chapitre5 { background:var(--gris); }
+  .timeline { margin:60px 0; position:relative; padding-left:40px; }
+  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,var(--rouge),transparent); }
+  .timeline-item { margin-bottom:48px; position:relative; }
+  .timeline-item::before { content:''; position:absolute; left:-44px; top:6px; width:8px; height:8px; border-radius:50%; background:var(--rouge); box-shadow:0 0 12px rgba(230,48,48,0.5); }
+  .timeline-date { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--rouge); text-transform:uppercase; margin-bottom:8px; }
+  .timeline-titre { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--blanc); margin-bottom:10px; }
+  .timeline-texte { font-size:14px; line-height:1.75; color:var(--texte); max-width:600px; }
+
+  footer { padding:60px; background:#111; border-top:1px solid #222; display:flex; justify-content:space-between; align-items:flex-end; }
+  .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--blanc); letter-spacing:4px; line-height:1; }
+  .footer-logo span { color:var(--rouge); }
+  .footer-meta { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(200,196,188,0.4); margin-top:12px; text-transform:uppercase; line-height:1.8; }
+  .footer-sources h4 { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--rouge); text-transform:uppercase; margin-bottom:16px; }
+  .footer-sources ul { list-style:none; font-size:12px; line-height:2; color:rgba(200,196,188,0.5); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">TSS<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#chapitre1">L'œil</a></li>
+    <li><a href="#chapitre2">La machine</a></li>
+    <li><a href="#chapitre3">Sondage</a></li>
+    <li><a href="#chapitre4">Le débat</a></li>
+    <li><a href="#chapitre5">Demain</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <svg class="hero-eyecam" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="90" stroke="white" stroke-width="1"/>
+    <circle cx="100" cy="100" r="60" stroke="white" stroke-width="1"/>
+    <circle cx="100" cy="100" r="25" fill="white"/>
+    <line x1="10" y1="100" x2="70" y2="100" stroke="white" stroke-width="1"/>
+    <line x1="130" y1="100" x2="190" y2="100" stroke="white" stroke-width="1"/>
+    <line x1="100" y1="10" x2="100" y2="70" stroke="white" stroke-width="1"/>
+    <line x1="100" y1="130" x2="100" y2="190" stroke="white" stroke-width="1"/>
+  </svg>
+  <div class="observe-label"><span class="rec-dot"></span>En cours d'enregistrement</div>
+  <div class="hero-tag">Webdocumentaire — BUT Informatique IUT Paul Sabatier</div>
+  <h1>TOULOUSE<br><span class="red">SOUS</span><br>SURVEILLANCE</h1>
+  <p class="hero-sub">Toulouse compte plus de 650 caméras dans ses rues. Derrière les objectifs, des algorithmes apprennent à nous regarder. À nous reconnaître. À nous analyser.</p>
+  <div class="hero-question">"Quand l'algorithme surveille la ville,<br>qui surveille l'algorithme ?"</div>
+  <div class="scroll-hint"><div class="scroll-line"></div>DÉFILER</div>
+</section>
+
+<!-- CHAPITRE 1 -->
+<section id="chapitre1">
+  <div class="section-label">Chapitre 01</div>
+  <h2>L'ŒIL QUI NE<br>DORT JAMAIS</h2>
+  <p class="terrain-texte">Dans les rues de Toulouse, sur les quais de la Garonne, à l'entrée des écoles de Colomiers — des centaines de caméras enregistrent en continu. Ce qui ressemble à une infrastructure de sécurité banale cache une réalité bien plus complexe : ces caméras ne se contentent plus de filmer. Elles analysent.</p>
+
+  <div class="chiffres-grid">
+    <div class="chiffre-bloc">
+      <div class="chiffre-num">650<span>+</span></div>
+      <div class="chiffre-label">Caméras de vidéoprotection actives 24h/24, surveillées par 40 opérateurs</div>
+      <div class="chiffre-ville">Toulouse</div>
+    </div>
+    <div class="chiffre-bloc">
+      <div class="chiffre-num">170</div>
+      <div class="chiffre-label">Caméras réparties sur tout le territoire communal depuis 2018</div>
+      <div class="chiffre-ville">Colomiers</div>
+    </div>
+    <div class="chiffre-bloc">
+      <div class="chiffre-num">40</div>
+      <div class="chiffre-label">Caméras aux entrées de ville, écoles et bâtiments publics</div>
+      <div class="chiffre-ville">Portet-sur-Garonne</div>
+    </div>
+  </div>
+
+  <div class="placeholder-photo">
+    <div class="placeholder-icon">📷</div>
+    <div>PHOTOS TERRAIN — À INTÉGRER CE WEEK-END</div>
+    <div style="font-size:9px;opacity:0.5">Caméras filmées dans les rues de Toulouse / Colomiers</div>
+  </div>
+
+  <p class="terrain-texte" style="margin-top:40px">Au cœur de Toulouse, un Centre de Supervision Urbain centralise les images de toutes ces caméras. 40 opérateurs s'y relaient 24h sur 24. Mais la vraie révolution ne vient pas des humains derrière les écrans — elle vient de ce que les machines commencent à faire à leur place.</p>
+</section>
+
+<!-- CHAPITRE 2 -->
+<section id="chapitre2">
+  <div class="section-label">Chapitre 02</div>
+  <h2>LA MACHINE<br>APPREND À<br>REGARDER</h2>
+
+  <div class="expert-card">
+    <div class="expert-avatar">AC</div>
+    <div class="expert-name">Alain Crouzil</div>
+    <div class="expert-role">Chercheur — IRIT / MINDS</div>
+    <div class="expert-desc">Maître de conférences à l'Université Toulouse III — Paul Sabatier. Membre de l'équipe MINDS (Computational Imaging and Vision) à l'IRIT. Ses recherches portent sur la vision par ordinateur, l'analyse de vidéos et la compréhension de scènes.</div>
+  </div>
+
+  <p class="interview-intro">Rencontré dans son laboratoire sur le campus Paul Sabatier, Alain Crouzil nous a ouvert les portes d'un monde où les machines apprennent à voir — et à comprendre — ce qu'elles observent. Une conversation qui dépasse largement le cadre de la surveillance.</p>
+
+  <div class="themes-grid">
+    <div class="theme-bloc">
+      <div class="theme-ico">🎯</div>
+      <div class="theme-titre">Projet Victoria</div>
+      <div class="theme-texte">En collaboration avec le Ministère de l'Intérieur, le projet Victoria explore comment, à partir de vidéos prises sous différents angles, il est possible de reconstituer la trajectoire d'une personne dans l'espace grâce à la géométrie spatiale. Plusieurs caméras, un seul individu suivi à travers la ville.</div>
+      <div class="theme-tag">Collaboration Ministère de l'Intérieur</div>
+    </div>
+    <div class="theme-bloc">
+      <div class="theme-ico">🧠</div>
+      <div class="theme-titre">L'IA, une boîte noire</div>
+      <div class="theme-texte">L'intelligence artificielle est souvent qualifiée de "boîte noire" : on lui soumet des données, elle produit un résultat, mais le chemin reste opaque. Les progrès ont été fulgurants ces dernières années — portés par la puissance des GPU et les masses de données d'internet. L'avenir ? Peut-être les ordinateurs quantiques, horizon encore incertain.</div>
+      <div class="theme-tag">IA & puissance de calcul</div>
+    </div>
+    <div class="theme-bloc">
+      <div class="theme-ico">🦴</div>
+      <div class="theme-titre">Reconnaissance de mouvement</div>
+      <div class="theme-texte">Inspirée des capteurs de la caméra Xbox Kinect, la reconnaissance de mouvement permet de détecter les articulations d'un corps humain en temps réel. Appliquée à la surveillance, cette technologie identifie des comportements suspects à partir de la seule gestuelle — sans avoir besoin de reconnaître un visage.</div>
+      <div class="theme-tag">Analyse gestuelle</div>
+    </div>
+    <div class="theme-bloc">
+      <div class="theme-ico">🔍</div>
+      <div class="theme-titre">Reconnaissance faciale</div>
+      <div class="theme-texte">Désignée par des noms de code comme "Brochet" ou "Grenouille" dans les systèmes policiers, la reconnaissance faciale permet d'identifier une personne filmée par une caméra. Un outil puissant pour les enquêteurs, mais dont les biais algorithmiques soulèvent des questions fondamentales sur l'équité de son usage.</div>
+      <div class="theme-tag">Identification biométrique</div>
+    </div>
+    <div class="theme-bloc">
+      <div class="theme-ico">🔫</div>
+      <div class="theme-titre">Détection d'armes à feu</div>
+      <div class="theme-texte">Des algorithmes capables de détecter automatiquement la présence d'une arme à feu dans une image ou une vidéo sont désormais utilisés en soutien aux enquêteurs. Ils permettent d'accélérer le traitement de grandes quantités de footage vidéo lors d'investigations criminelles.</div>
+      <div class="theme-tag">Outil d'enquête</div>
+    </div>
+    <div class="theme-bloc">
+      <div class="theme-ico">🚗</div>
+      <div class="theme-titre">Capteurs LiDAR</div>
+      <div class="theme-texte">Les véhicules autonomes utilisent des capteurs LiDAR pour percevoir leur environnement en 3D. L'équipe MINDS a travaillé sur la détection d'obstacles par temps de brouillard avec cette technologie. Ce même principe de perception spatiale se retrouve dans les systèmes de surveillance urbaine avancés.</div>
+      <div class="theme-tag">Véhicules autonomes & surveillance</div>
+    </div>
+    <div class="theme-bloc">
+      <div class="theme-ico">🏴</div>
+      <div class="theme-titre">Mistral & souveraineté numérique</div>
+      <div class="theme-texte">Alain Crouzil évoque Mistral AI comme symbole d'une volonté européenne de ne pas dépendre des géants américains ou chinois pour ses IA. La souveraineté numérique, c'est aussi choisir qui contrôle les algorithmes qui nous surveillent.</div>
+      <div class="theme-tag">Souveraineté numérique</div>
+    </div>
+    <div class="theme-bloc">
+      <div class="theme-ico">🇪🇺</div>
+      <div class="theme-titre">ANITI & l'IA explicable</div>
+      <div class="theme-texte">L'Institut Aniti, basé à Toulouse, travaille sur une IA plus fiable et explicable — "l'IA acceptable". L'objectif : sortir de la boîte noire pour construire des systèmes dont on peut comprendre et auditer les décisions. Un enjeu fondamental pour que la surveillance algorithmique ne reste pas opaque.</div>
+      <div class="theme-tag">IA explicable & éthique</div>
+    </div>
+  </div>
+
+  <div class="citation-bloc">
+    <div class="citation-guillemets">"</div>
+    <div class="citation-texte">Le RGPD pose des problèmes concrets aux chercheurs. Pour un projet mené à l'IRIT, il a fallu attendre quatre mois pour obtenir l'accord administratif. On a besoin de données pour faire avancer la science — mais ces limites existent pour une bonne raison.</div>
+    <div class="citation-auteur">— Alain Crouzil, IRIT / MINDS</div>
+  </div>
+</section>
+
+<!-- CHAPITRE 3 — SONDAGE -->
+<section id="chapitre3">
+  <div class="section-label">Chapitre 03</div>
+  <h2>ET VOUS,<br>QU'EN PENSEZ<br>VOUS ?</h2>
+  <p class="terrain-texte">La vidéosurveillance algorithmique ne laisse personne indifférent. Répondez à ce sondage anonyme et découvrez ce que pensent les autres visiteurs.</p>
+
+  <div class="sondage-container">
+
+    <!-- Q1 -->
+    <div class="sondage-question" id="q1">
+      <div class="sq-texte">Savez-vous combien de caméras de surveillance il y a à Toulouse ?</div>
+      <div class="sq-options">
+        <label class="sq-option"><input type="radio" name="q1" value="a"> Moins de 200</label>
+        <label class="sq-option"><input type="radio" name="q1" value="b"> Entre 200 et 500</label>
+        <label class="sq-option"><input type="radio" name="q1" value="c"> Plus de 600</label>
+        <label class="sq-option"><input type="radio" name="q1" value="d"> Je ne savais pas</label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="sondage-question" id="q2">
+      <div class="sq-texte">Vous sentez-vous surveillé(e) dans l'espace public à Toulouse ?</div>
+      <div class="sq-options">
+        <label class="sq-option"><input type="radio" name="q2" value="a"> Oui, tout le temps</label>
+        <label class="sq-option"><input type="radio" name="q2" value="b"> Parfois</label>
+        <label class="sq-option"><input type="radio" name="q2" value="c"> Rarement</label>
+        <label class="sq-option"><input type="radio" name="q2" value="d"> Non, ça ne me traverse pas l'esprit</label>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="sondage-question" id="q3">
+      <div class="sq-texte">Pensez-vous que la vidéosurveillance algorithmique rend la ville plus sûre ?</div>
+      <div class="sq-options">
+        <label class="sq-option"><input type="radio" name="q3" value="a"> Oui, clairement</label>
+        <label class="sq-option"><input type="radio" name="q3" value="b"> Peut-être, mais ce n'est pas prouvé</label>
+        <label class="sq-option"><input type="radio" name="q3" value="c"> Non, c'est surtout une illusion de sécurité</label>
+        <label class="sq-option"><input type="radio" name="q3" value="d"> Je ne sais pas</label>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="sondage-question" id="q4">
+      <div class="sq-texte">Seriez-vous à l'aise avec une caméra capable de reconnaître votre visage dans la rue ?</div>
+      <div class="sq-options">
+        <label class="sq-option"><input type="radio" name="q4" value="a"> Oui, si c'est pour ma sécurité</label>
+        <label class="sq-option"><input type="radio" name="q4" value="b"> Ça dépend du contexte</label>
+        <label class="sq-option"><input type="radio" name="q4" value="c"> Non, c'est une atteinte à ma vie privée</label>
+        <label class="sq-option"><input type="radio" name="q4" value="d"> Je préfère ne pas y penser</label>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="sondage-question" id="q5">
+      <div class="sq-texte">Faites-vous confiance aux institutions pour utiliser ces données de manière éthique ?</div>
+      <div class="sq-options">
+        <label class="sq-option"><input type="radio" name="q5" value="a"> Oui, totalement</label>
+        <label class="sq-option"><input type="radio" name="q5" value="b"> Plutôt oui</label>
+        <label class="sq-option"><input type="radio" name="q5" value="c"> Plutôt non</label>
+        <label class="sq-option"><input type="radio" name="q5" value="d"> Non, pas du tout</label>
+      </div>
+    </div>
+
+    <button class="sondage-btn" onclick="afficherResultats()">Voir les résultats →</button>
+
+    <div class="sondage-resultats" id="resultats">
+      <div class="merci">✓ Merci pour votre participation</div>
+      <p style="font-size:13px;margin-bottom:24px;color:var(--texte)">Résultats simulés — représentatifs des tendances observées dans des enquêtes similaires sur la surveillance en France.</p>
+
+      <div class="result-item">
+        <div class="result-label"><span>La vidéosurveillance rend la ville plus sûre</span><span style="color:var(--rouge)">34%</span></div>
+        <div class="result-bar-bg"><div class="result-bar" style="width:0%" data-width="34%"></div></div>
+      </div>
+      <div class="result-item">
+        <div class="result-label"><span>Sentiment d'être surveillé en permanence</span><span style="color:var(--rouge)">41%</span></div>
+        <div class="result-bar-bg"><div class="result-bar" style="width:0%" data-width="41%"></div></div>
+      </div>
+      <div class="result-item">
+        <div class="result-label"><span>Opposés à la reconnaissance faciale dans la rue</span><span style="color:var(--rouge)">58%</span></div>
+        <div class="result-bar-bg"><div class="result-bar" style="width:0%" data-width="58%"></div></div>
+      </div>
+      <div class="result-item">
+        <div class="result-label"><span>Confiance dans les institutions pour ces données</span><span style="color:var(--rouge)">22%</span></div>
+        <div class="result-bar-bg"><div class="result-bar" style="width:0%" data-width="22%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPITRE 4 -->
+<section id="chapitre4">
+  <div class="section-label">Chapitre 04</div>
+  <h2>POUR OU<br>CONTRE ?</h2>
+  <p class="terrain-texte">La surveillance algorithmique révèle deux visions irréconciliables de la ville et du rapport entre l'État et ses citoyens.</p>
+
+  <div class="debat-grid">
+    <div class="debat-bloc debat-pour">
+      <div class="debat-titre">✓ Pour</div>
+      <div class="debat-point">La vidéosurveillance dissuade les comportements délictueux et réduit le sentiment d'insécurité dans les espaces publics.</div>
+      <div class="debat-point">Elle constitue un outil précieux pour les enquêteurs, permettant de retracer des trajectoires et d'identifier des suspects — comme le démontre le projet Victoria.</div>
+      <div class="debat-point">Les algorithmes de détection permettent une réaction plus rapide aux situations d'urgence, là où un opérateur humain pourrait manquer un événement.</div>
+      <div class="debat-point">Le cadre légal français (RGPD, autorisations préfectorales) offre des garde-fous suffisants pour encadrer ces usages.</div>
+    </div>
+    <div class="debat-bloc debat-contre">
+      <div class="debat-titre">✗ Contre</div>
+      <div class="debat-point">Les algorithmes de reconnaissance faciale présentent des biais documentés — notamment envers certaines minorités — avec des risques d'erreurs judiciaires graves.</div>
+      <div class="debat-point">La surveillance généralisée crée un effet d'autocensure : savoir qu'on est observé modifie les comportements, même légaux.</div>
+      <div class="debat-point">Contrairement à des pays plus autoritaires, l'Europe doit fixer des limites claires — au risque de normaliser des pratiques incompatibles avec ses valeurs démocratiques.</div>
+      <div class="debat-point">L'opacité des "boîtes noires" algorithmiques rend impossible tout contrôle citoyen réel sur ces systèmes.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAPITRE 5 -->
+<section id="chapitre5">
+  <div class="section-label">Chapitre 05</div>
+  <h2>ET<br>DEMAIN ?</h2>
+  <p class="terrain-texte">La surveillance algorithmique évolue rapidement. Entre régulation européenne, course à la puissance de calcul et enjeux de souveraineté, voici ce qui s'annonce.</p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">2024</div>
+      <div class="timeline-titre">L'AI Act Européen</div>
+      <div class="timeline-texte">L'Union Européenne adopte le premier cadre légal mondial sur l'intelligence artificielle. L'AI Act classe la reconnaissance faciale en temps réel dans les espaces publics parmi les usages à "haut risque", voire interdits dans certains cas.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Aujourd'hui</div>
+      <div class="timeline-titre">L'IA explicable — le chantier Aniti</div>
+      <div class="timeline-texte">L'Institut Aniti à Toulouse travaille sur des IA "acceptables" — compréhensibles et auditables. L'enjeu : sortir de la boîte noire pour créer des systèmes dont on peut rendre compte démocratiquement.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Futur proche</div>
+      <div class="timeline-titre">L'ordinateur quantique à l'horizon</div>
+      <div class="timeline-texte">La prochaine révolution pourrait venir de l'informatique quantique — avec des capacités de traitement d'images potentiellement sans commune mesure avec ce qui existe aujourd'hui. Un horizon encore incertain, mais qui redéfinira les limites du possible.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">Enjeu majeur</div>
+      <div class="timeline-titre">Souveraineté numérique</div>
+      <div class="timeline-texte">Qui contrôle les algorithmes qui nous surveillent ? La question, portée par des acteurs comme Mistral AI, dépasse le simple cadre technologique. Elle touche à notre capacité collective à décider des règles du jeu sans dépendre de plateformes étrangères.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="footer-logo">TSS<span>.</span></div>
+    <div class="footer-meta">
+      BUT Informatique — IUT Paul Sabatier<br>
+      R2.13 Expression et Communication<br>
+      Toulouse — 2026
+    </div>
+  </div>
+  <div class="footer-sources">
+    <h4>Sources</h4>
+    <ul>
+      <li>Alain Crouzil — IRIT / MINDS, Université Toulouse III</li>
+      <li>Mairie de Toulouse — Service tranquillité publique</li>
+      <li>Ville de Colomiers — Dispositif vidéoprotection</li>
+      <li>European Parliament — AI Act (2024)</li>
+      <li>ANITI — Institut Toulouse IA</li>
+      <li>RGPD — Règlement Général sur la Protection des Données</li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // Curseur
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX; my=e.clientY;
+    cursor.style.left=mx-6+'px'; cursor.style.top=my-6+'px';
+  });
+  function animRing(){
+    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+    ring.style.left=rx-18+'px'; ring.style.top=ry-18+'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+    });
+  },{threshold:0.1});
+  document.querySelectorAll('.theme-bloc,.chiffre-bloc,.timeline-item,.debat-bloc,.sondage-question').forEach(el=>{
+    el.style.opacity='0'; el.style.transform='translateY(24px)';
+    el.style.transition='opacity 0.6s ease,transform 0.6s ease';
+    obs.observe(el);
+  });
+
+  // Sondage
+  document.querySelectorAll('.sq-option').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      const name = opt.querySelector('input').name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(i=>i.closest('.sq-option').classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+
+  function afficherResultats(){
+    const resultats = document.getElementById('resultats');
+    resultats.style.display='block';
+    setTimeout(()=>{
+      document.querySelectorAll('.result-bar').forEach(bar=>{
+        bar.style.width = bar.getAttribute('data-width');
+      });
+    },100);
+    document.querySelector('.sondage-btn').style.display='none';
+    resultats.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+</script>
+</body>
+</html>
