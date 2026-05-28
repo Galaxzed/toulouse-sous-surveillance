@@ -63,9 +63,143 @@
   .chiffre-ville { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(200,196,188,0.4); margin-top:12px; text-transform:uppercase; }
   .terrain-texte { max-width:680px; font-size:16px; line-height:1.85; color:var(--texte); }
 
-  /* PLACEHOLDER PHOTO */
-  .placeholder-photo { width:100%; aspect-ratio:16/9; background:#111; border:1px dashed #333; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; margin:40px 0; color:#444; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; }
-  .placeholder-icon { font-size:32px; opacity:0.3; }
+  /* VIDEO */
+  .video-container {
+    width:100%;
+    margin:48px 0;
+    position:relative;
+    background:#000;
+  }
+  .video-label {
+    font-family:'Space Mono',monospace;
+    font-size:10px;
+    letter-spacing:3px;
+    color:var(--rouge);
+    text-transform:uppercase;
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .video-label::before { content:''; width:20px; height:1px; background:var(--rouge); }
+  .video-container video {
+    width:100%;
+    display:block;
+    max-height:520px;
+    object-fit:cover;
+  }
+  .video-caption {
+    background:#111;
+    border:1px solid #222;
+    border-top:none;
+    padding:14px 20px;
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:1px;
+    color:rgba(200,196,188,0.5);
+  }
+
+  /* SLIDESHOW */
+  .slideshow-wrapper { margin:60px 0; }
+  .slideshow-label {
+    font-family:'Space Mono',monospace;
+    font-size:10px;
+    letter-spacing:3px;
+    color:var(--rouge);
+    text-transform:uppercase;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .slideshow-label::before { content:''; width:20px; height:1px; background:var(--rouge); }
+
+  .slideshow {
+    position:relative;
+    background:#000;
+    overflow:hidden;
+  }
+  .slides {
+    display:flex;
+    transition:transform 0.5s ease;
+  }
+  .slide {
+    min-width:100%;
+    position:relative;
+  }
+  .slide img {
+    width:100%;
+    height:auto;
+    max-height:700px;
+    object-fit:contain;
+    display:block;
+    background:#0a0a0a;
+    filter:grayscale(20%) contrast(1.05);
+  }
+  .slide-info {
+    position:absolute;
+    bottom:0; left:0; right:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.92), transparent);
+    padding:40px 32px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+  }
+  .slide-lieu {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:24px;
+    color:var(--blanc);
+    letter-spacing:1px;
+  }
+  .slide-desc {
+    font-family:'Space Mono',monospace;
+    font-size:10px;
+    letter-spacing:1px;
+    color:rgba(200,196,188,0.6);
+    margin-top:4px;
+    max-width:420px;
+    line-height:1.6;
+  }
+  .slide-num {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:48px;
+    color:rgba(230,48,48,0.3);
+    line-height:1;
+  }
+
+  .slide-nav {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#111;
+    border:1px solid #222;
+    border-top:none;
+    padding:12px 20px;
+  }
+  .slide-btn {
+    background:none;
+    border:1px solid #333;
+    color:var(--texte);
+    padding:8px 20px;
+    font-family:'Space Mono',monospace;
+    font-size:10px;
+    letter-spacing:2px;
+    cursor:pointer;
+    transition:all 0.2s;
+  }
+  .slide-btn:hover { border-color:var(--rouge); color:var(--blanc); }
+  .slide-dots {
+    display:flex;
+    gap:8px;
+  }
+  .dot {
+    width:6px; height:6px;
+    border-radius:50%;
+    background:#333;
+    cursor:pointer;
+    transition:background 0.2s;
+  }
+  .dot.active { background:var(--rouge); }
 
   /* CHAPITRE 2 */
   #chapitre2 { background:var(--noir); }
@@ -93,8 +227,7 @@
   /* CHAPITRE 3 — SONDAGE */
   #chapitre3 { background:var(--gris); }
   .sondage-container { max-width:720px; margin:60px 0; }
-  .sondage-question { background:var(--noir); border:1px solid #2a2a2a; padding:40px; margin-bottom:4px; position:relative; overflow:hidden; }
-  .sondage-question:hover { border-color:#333; }
+  .sondage-question { background:var(--noir); border:1px solid #2a2a2a; padding:40px; margin-bottom:4px; }
   .sq-texte { font-size:17px; color:var(--blanc); margin-bottom:24px; line-height:1.5; }
   .sq-options { display:flex; flex-direction:column; gap:8px; }
   .sq-option { display:flex; align-items:center; gap:14px; padding:12px 16px; background:#111; border:1px solid #222; cursor:pointer; transition:all 0.2s; font-size:14px; color:var(--texte); }
@@ -122,17 +255,7 @@
   .debat-point { display:flex; gap:16px; margin-bottom:20px; font-size:14px; line-height:1.6; color:var(--texte); }
   .debat-point::before { content:'—'; color:var(--texte); opacity:0.4; flex-shrink:0; }
 
-  /* CHAPITRE 5 */
-  #chapitre5 { background:var(--gris); }
-  .timeline { margin:60px 0; position:relative; padding-left:40px; }
-  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,var(--rouge),transparent); }
-  .timeline-item { margin-bottom:48px; position:relative; }
-  .timeline-item::before { content:''; position:absolute; left:-44px; top:6px; width:8px; height:8px; border-radius:50%; background:var(--rouge); box-shadow:0 0 12px rgba(230,48,48,0.5); }
-  .timeline-date { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--rouge); text-transform:uppercase; margin-bottom:8px; }
-  .timeline-titre { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--blanc); margin-bottom:10px; }
-  .timeline-texte { font-size:14px; line-height:1.75; color:var(--texte); max-width:600px; }
-
-  footer { padding:60px; background:#111; border-top:1px solid #222; display:flex; justify-content:space-between; align-items:flex-end; }
+  footer { padding:60px; background:#111; border-top:1px solid #222; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:40px; }
   .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--blanc); letter-spacing:4px; line-height:1; }
   .footer-logo span { color:var(--rouge); }
   .footer-meta { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(200,196,188,0.4); margin-top:12px; text-transform:uppercase; line-height:1.8; }
@@ -150,12 +273,12 @@
 <div class="cursor-ring" id="cursorRing"></div>
 
 <nav>
+  <div class="nav-logo">TSS<span>.</span></div>
   <ul class="nav-links">
     <li><a href="#chapitre1">L'œil</a></li>
     <li><a href="#chapitre2">La machine</a></li>
     <li><a href="#chapitre3">Sondage</a></li>
     <li><a href="#chapitre4">Le débat</a></li>
-    <li><a href="#chapitre5">Demain</a></li>
   </ul>
 </nav>
 
@@ -174,7 +297,7 @@
   <div class="observe-label"><span class="rec-dot"></span>En cours d'enregistrement</div>
   <div class="hero-tag">Webdocumentaire — BUT Informatique IUT Paul Sabatier</div>
   <h1>TOULOUSE<br><span class="red">SOUS</span><br>SURVEILLANCE</h1>
-  <p class="hero-sub">Toulouse compte plus de 650 caméras dans ses rues. Derrière les objectifs, des algorithmes apprennent à nous regarder. À nous reconnaître. À nous analyser.</p>
+  <p class="hero-sub">Toulouse compte plus de 710 caméras dans ses rues. Derrière les objectifs, des algorithmes apprennent à nous regarder. À nous reconnaître. À nous analyser.</p>
   <div class="hero-question">"Quand l'algorithme surveille la ville,<br>qui surveille l'algorithme ?"</div>
   <div class="scroll-hint"><div class="scroll-line"></div>DÉFILER</div>
 </section>
@@ -183,13 +306,13 @@
 <section id="chapitre1">
   <div class="section-label">Chapitre 01</div>
   <h2>L'ŒIL QUI NE<br>DORT JAMAIS</h2>
-  <p class="terrain-texte">Dans les rues de Toulouse, sur les quais de la Garonne, à l'entrée des écoles de Colomiers — des centaines de caméras enregistrent en continu. Ce qui ressemble à une infrastructure de sécurité banale cache une réalité bien plus complexe : ces caméras ne se contentent plus de filmer. Elles analysent.</p>
+  <p class="terrain-texte">Dans les rues de Toulouse, sur les quais de la Garonne, à l'entrée des écoles de Colomiers, des centaines de caméras enregistrent en continu. Ce qui ressemble à une infrastructure de sécurité banale cache une réalité bien plus complexe : ces caméras ne se contentent plus de filmer. Elles analysent.</p>
 
   <div class="chiffres-grid">
     <div class="chiffre-bloc">
-      <div class="chiffre-num">650<span>+</span></div>
+      <div class="chiffre-num">710<span>+</span></div>
       <div class="chiffre-label">Caméras de vidéoprotection actives 24h/24, surveillées par 40 opérateurs</div>
-      <div class="chiffre-ville">Toulouse</div>
+      <div class="chiffre-ville">Toulouse — Décembre 2025</div>
     </div>
     <div class="chiffre-bloc">
       <div class="chiffre-num">170</div>
@@ -203,13 +326,128 @@
     </div>
   </div>
 
-  <div class="placeholder-photo">
-    <div class="placeholder-icon">📷</div>
-    <div>PHOTOS TERRAIN — À INTÉGRER CE WEEK-END</div>
-    <div style="font-size:9px;opacity:0.5">Caméras filmées dans les rues de Toulouse / Colomiers</div>
+  <!-- VIDEO REPORTAGE -->
+  <div class="video-label">Reportage terrain — Place du Capitole, Toulouse</div>
+  <div class="video-container">
+    <!--
+      INSTRUCTION : remplacez "votre-video.mp4" par le nom exact de votre fichier vidéo
+      Uploadez votre vidéo dans le même dossier que index.html sur GitHub
+    -->
+    <video controls playsinline style="width:100%;max-height:600px;object-fit:contain;background:#000;">
+      <source src="reportage-capitole.mp4" type="video/mp4">
+      <source src="reportage-capitole.mov" type="video/quicktime">
+      Votre navigateur ne supporte pas la lecture vidéo.
+    </video>
+    <div class="video-caption">Parcours autour du Capitole — 3 caméras de surveillance identifiées en 36 secondes</div>
   </div>
 
-  <p class="terrain-texte" style="margin-top:40px">Au cœur de Toulouse, un Centre de Supervision Urbain centralise les images de toutes ces caméras. 40 opérateurs s'y relaient 24h sur 24. Mais la vraie révolution ne vient pas des humains derrière les écrans — elle vient de ce que les machines commencent à faire à leur place.</p>
+  <!-- SLIDESHOW PHOTOS -->
+  <div class="slideshow-wrapper">
+    <div class="slideshow-label">Caméras identifiées — Toulouse centre-ville</div>
+    <div class="slideshow">
+      <div class="slides" id="slides">
+
+        <!-- SLIDE 1 -->
+        <div class="slide">
+          <!--
+            INSTRUCTION SLIDE 1 : remplacez "camera1.jpg" par votre photo
+            Uploadez vos photos dans le même dossier que index.html sur GitHub
+          -->
+          <img src="camera1.jpg" alt="Caméra Place Wilson" onerror="this.parentElement.style.background='#111';this.style.display='none'">
+          <div class="slide-info">
+            <div>
+              <div class="slide-lieu">Place Wilson</div>
+              <div class="slide-desc">Nom de l'opérateur : ville de toulouse [ Public ]
+Surveillance : Municipale
+Apparence de la caméra : Dome
+Coordonées de la caméra : 43.6044327852112 1.44731998443604
+Direction : 360° depuis le nord, 0° depuis le sol</div>
+            </div>
+            <div class="slide-num">01</div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="slide">
+          <img src="camera2.jpg" alt="Caméra Place Wilson" onerror="this.parentElement.style.background='#111';this.style.display='none'">
+          <div class="slide-info">
+            <div>
+              <div class="slide-lieu">Place Wilson</div>
+              <div class="slide-desc">Nom de l'opérateur : ville de Toulouse [ Public ]
+Surveillance : Municipale
+Apparence de la caméra : Dome
+Coordonées de la caméra : 43.60454155039514 1.4467942714691162
+Direction : 360° depuis le nord, 0° depuis le sol</div>
+            </div>
+            <div class="slide-num">02</div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="slide">
+          <img src="camera3.jpg" alt="Caméra Place Wilson" onerror="this.parentElement.style.background='#111';this.style.display='none'">
+          <div class="slide-info">
+            <div>
+              <div class="slide-lieu">Place Wilson</div>
+              <div class="slide-desc">Nom de l'opérateur : ville de Toulouse [ Public ]
+Surveillance : Municipale
+Apparence de la caméra : Dome
+Coordonées de la caméra : 43.60482900029184 1.4467298984527588
+Direction : 360° depuis le nord, 0° depuis le sol
+</div>
+            </div>
+            <div class="slide-num">03</div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4 -->
+        <div class="slide">
+          <img src="camera4.jpg" alt="Caméra Place Capitole" onerror="this.parentElement.style.background='#111';this.style.display='none'">
+          <div class="slide-info">
+            <div>
+              <div class="slide-lieu">Place du Capitole</div>
+              <div class="slide-desc">Nom de l'opérateur : mairie de toulouse [ Public ]
+Surveillance : Municipale
+Apparence de la caméra : Dome
+Coordonées de la caméra : 43.60480569359463 1.443800926208496
+Direction : 354° depuis le nord, 70° depuis le sol</div>
+            </div>
+            <div class="slide-num">04</div>
+          </div>
+        </div>
+
+        <!-- SLIDE 5 -->
+        <div class="slide">
+          <img src="camera5.jpg" alt="Place du Capitole" onerror="this.parentElement.style.background='#111';this.style.display='none'">
+          <div class="slide-info">
+            <div>
+              <div class="slide-lieu">Place du Capitole</div>
+              <div class="slide-desc">Nom de l'opérateur : [ Public ]
+Surveillance : Municipale
+Apparence de la caméra : Dome
+Coordonées de la caméra : 43.60383457318423 1.4436668157577515
+Direction : 0° depuis le nord, 0° depuis le sol</div>
+            </div>
+            <div class="slide-num">05</div>
+          </div>
+        </div>
+
+      </div><!-- /slides -->
+    </div><!-- /slideshow -->
+    <div class="slide-nav">
+      <button class="slide-btn" onclick="prevSlide()">← Précédent</button>
+      <div class="slide-dots" id="dots">
+        <div class="dot active" onclick="goTo(0)"></div>
+        <div class="dot" onclick="goTo(1)"></div>
+        <div class="dot" onclick="goTo(2)"></div>
+        <div class="dot" onclick="goTo(3)"></div>
+        <div class="dot" onclick="goTo(4)"></div>
+      </div>
+      <button class="slide-btn" onclick="nextSlide()">Suivant →</button>
+    </div>
+  </div>
+
+  <p class="terrain-texte">Ce qui nous choque c'est la proximité que nous avons avec les caméras, nous en sommes entouré et pourtant nous ne les voyants pas ou très peu, la ville en ai littérallement trufé, tous sa pour collecté des millier d'heure de vidéo qui ne vont pas être visionné mais analysé par des algorithmes.</p>
 </section>
 
 <!-- CHAPITRE 2 -->
@@ -291,9 +529,7 @@
   <p class="terrain-texte">La vidéosurveillance algorithmique ne laisse personne indifférent. Répondez à ce sondage anonyme et découvrez ce que pensent les autres visiteurs.</p>
 
   <div class="sondage-container">
-
-    <!-- Q1 -->
-    <div class="sondage-question" id="q1">
+    <div class="sondage-question">
       <div class="sq-texte">Savez-vous combien de caméras de surveillance il y a à Toulouse ?</div>
       <div class="sq-options">
         <label class="sq-option"><input type="radio" name="q1" value="a"> Moins de 200</label>
@@ -302,9 +538,7 @@
         <label class="sq-option"><input type="radio" name="q1" value="d"> Je ne savais pas</label>
       </div>
     </div>
-
-    <!-- Q2 -->
-    <div class="sondage-question" id="q2">
+    <div class="sondage-question">
       <div class="sq-texte">Vous sentez-vous surveillé(e) dans l'espace public à Toulouse ?</div>
       <div class="sq-options">
         <label class="sq-option"><input type="radio" name="q2" value="a"> Oui, tout le temps</label>
@@ -313,9 +547,7 @@
         <label class="sq-option"><input type="radio" name="q2" value="d"> Non, ça ne me traverse pas l'esprit</label>
       </div>
     </div>
-
-    <!-- Q3 -->
-    <div class="sondage-question" id="q3">
+    <div class="sondage-question">
       <div class="sq-texte">Pensez-vous que la vidéosurveillance algorithmique rend la ville plus sûre ?</div>
       <div class="sq-options">
         <label class="sq-option"><input type="radio" name="q3" value="a"> Oui, clairement</label>
@@ -324,9 +556,7 @@
         <label class="sq-option"><input type="radio" name="q3" value="d"> Je ne sais pas</label>
       </div>
     </div>
-
-    <!-- Q4 -->
-    <div class="sondage-question" id="q4">
+    <div class="sondage-question">
       <div class="sq-texte">Seriez-vous à l'aise avec une caméra capable de reconnaître votre visage dans la rue ?</div>
       <div class="sq-options">
         <label class="sq-option"><input type="radio" name="q4" value="a"> Oui, si c'est pour ma sécurité</label>
@@ -335,9 +565,7 @@
         <label class="sq-option"><input type="radio" name="q4" value="d"> Je préfère ne pas y penser</label>
       </div>
     </div>
-
-    <!-- Q5 -->
-    <div class="sondage-question" id="q5">
+    <div class="sondage-question">
       <div class="sq-texte">Faites-vous confiance aux institutions pour utiliser ces données de manière éthique ?</div>
       <div class="sq-options">
         <label class="sq-option"><input type="radio" name="q5" value="a"> Oui, totalement</label>
@@ -352,7 +580,6 @@
     <div class="sondage-resultats" id="resultats">
       <div class="merci">✓ Merci pour votre participation</div>
       <p style="font-size:13px;margin-bottom:24px;color:var(--texte)">Résultats simulés — représentatifs des tendances observées dans des enquêtes similaires sur la surveillance en France.</p>
-
       <div class="result-item">
         <div class="result-label"><span>La vidéosurveillance rend la ville plus sûre</span><span style="color:var(--rouge)">34%</span></div>
         <div class="result-bar-bg"><div class="result-bar" style="width:0%" data-width="34%"></div></div>
@@ -377,52 +604,19 @@
 <section id="chapitre4">
   <div class="section-label">Chapitre 04</div>
   <h2>POUR OU<br>CONTRE ?</h2>
-  <p class="terrain-texte">La surveillance algorithmique révèle deux visions irréconciliables de la ville et du rapport entre l'État et ses citoyens.</p>
+  <p class="terrain-texte">La surveillance algorithmique révèle deux visions opposé sur ce sujet.</p>
 
   <div class="debat-grid">
     <div class="debat-bloc debat-pour">
-      <div class="debat-titre">✓ Pour</div>
-      <div class="debat-point">La vidéosurveillance dissuade les comportements délictueux et réduit le sentiment d'insécurité dans les espaces publics.</div>
-      <div class="debat-point">Elle constitue un outil précieux pour les enquêteurs, permettant de retracer des trajectoires et d'identifier des suspects — comme le démontre le projet Victoria.</div>
-      <div class="debat-point">Les algorithmes de détection permettent une réaction plus rapide aux situations d'urgence, là où un opérateur humain pourrait manquer un événement.</div>
-      <div class="debat-point">Le cadre légal français (RGPD, autorisations préfectorales) offre des garde-fous suffisants pour encadrer ces usages.</div>
+      <div class="debat-titre">Pour</div>
+      <div class="debat-point">La vidéosurveillance nous dissuade en permanance de commettre délits et réduit donc le sentiment d'insécurité dans les espaces publics.</div>
+      <div class="debat-point">Elle constitue un outil précieux pour les enquêteurs, permettant de retracer des trajectoires et d'identifier des suspects comme avec le projet Victoria.</div>
     </div>
     <div class="debat-bloc debat-contre">
-      <div class="debat-titre">✗ Contre</div>
-      <div class="debat-point">Les algorithmes de reconnaissance faciale présentent des biais documentés — notamment envers certaines minorités — avec des risques d'erreurs judiciaires graves.</div>
-      <div class="debat-point">La surveillance généralisée crée un effet d'autocensure : savoir qu'on est observé modifie les comportements, même légaux.</div>
-      <div class="debat-point">Contrairement à des pays plus autoritaires, l'Europe doit fixer des limites claires — au risque de normaliser des pratiques incompatibles avec ses valeurs démocratiques.</div>
-      <div class="debat-point">L'opacité des "boîtes noires" algorithmiques rend impossible tout contrôle citoyen réel sur ces systèmes.</div>
-    </div>
-  </div>
-</section>
-
-<!-- CHAPITRE 5 -->
-<section id="chapitre5">
-  <div class="section-label">Chapitre 05</div>
-  <h2>ET<br>DEMAIN ?</h2>
-  <p class="terrain-texte">La surveillance algorithmique évolue rapidement. Entre régulation européenne, course à la puissance de calcul et enjeux de souveraineté, voici ce qui s'annonce.</p>
-
-  <div class="timeline">
-    <div class="timeline-item">
-      <div class="timeline-date">2024</div>
-      <div class="timeline-titre">L'AI Act Européen</div>
-      <div class="timeline-texte">L'Union Européenne adopte le premier cadre légal mondial sur l'intelligence artificielle. L'AI Act classe la reconnaissance faciale en temps réel dans les espaces publics parmi les usages à "haut risque", voire interdits dans certains cas.</div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-date">Aujourd'hui</div>
-      <div class="timeline-titre">L'IA explicable — le chantier Aniti</div>
-      <div class="timeline-texte">L'Institut Aniti à Toulouse travaille sur des IA "acceptables" — compréhensibles et auditables. L'enjeu : sortir de la boîte noire pour créer des systèmes dont on peut rendre compte démocratiquement.</div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-date">Futur proche</div>
-      <div class="timeline-titre">L'ordinateur quantique à l'horizon</div>
-      <div class="timeline-texte">La prochaine révolution pourrait venir de l'informatique quantique — avec des capacités de traitement d'images potentiellement sans commune mesure avec ce qui existe aujourd'hui. Un horizon encore incertain, mais qui redéfinira les limites du possible.</div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-date">Enjeu majeur</div>
-      <div class="timeline-titre">Souveraineté numérique</div>
-      <div class="timeline-texte">Qui contrôle les algorithmes qui nous surveillent ? La question, portée par des acteurs comme Mistral AI, dépasse le simple cadre technologique. Elle touche à notre capacité collective à décider des règles du jeu sans dépendre de plateformes étrangères.</div>
+      <div class="debat-titre">Contre</div>
+      <div class="debat-point">Les algorithmes de reconnaissance faciale peuvent nous discriminer et d'entrainer des erreurs judiciaires graves.</div>
+      <div class="debat-point">Savoir qu'on est observé modifie nos comportements, ce qui nous oppresse.</div>
+      <div class="debat-point">L'opacité des "boîtes noires" algorithmiques rend impossible tout contrôle par quiconque à part ce qui les possède.</div>
     </div>
   </div>
 </section>
@@ -441,8 +635,8 @@
     <ul>
       <li>Alain Crouzil — IRIT / MINDS, Université Toulouse III</li>
       <li>Mairie de Toulouse — Service tranquillité publique</li>
-      <li>European Parliament — AI Act (2024)</li>
-      
+      <li>Mediacités — Toulouse, décembre 2025</li>
+      <li>IAATA — Carte collaborative caméras Toulouse</li>
     </ul>
   </div>
 </footer>
@@ -483,7 +677,6 @@
       opt.classList.add('selected');
     });
   });
-
   function afficherResultats(){
     const resultats = document.getElementById('resultats');
     resultats.style.display='block';
@@ -495,6 +688,20 @@
     document.querySelector('.sondage-btn').style.display='none';
     resultats.scrollIntoView({behavior:'smooth',block:'start'});
   }
+
+  // Slideshow
+  let current = 0;
+  const total = 5;
+  function updateSlide(){
+    document.getElementById('slides').style.transform = `translateX(-${current*100}%)`;
+    document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===current));
+  }
+  function nextSlide(){ current=(current+1)%total; updateSlide(); }
+  function prevSlide(){ current=(current-1+total)%total; updateSlide(); }
+  function goTo(n){ current=n; updateSlide(); }
+
+  // Auto-avance toutes les 4 secondes
+  setInterval(nextSlide, 4000);
 </script>
 </body>
 </html>
